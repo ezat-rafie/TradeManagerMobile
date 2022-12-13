@@ -7,19 +7,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-/*
-    icons are downloaded from <a target="_blank" href="https://icons8.com/icon/NwAwrEVExFBt/stocks">Stocks</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
-    images are downloaded from https://www.pexels.com/search/stock%20market/
- */
-
-public class MainActivity extends AppCompatActivity {
+public class AddAssetActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_add_asset);
     }
 
     @Override
@@ -35,15 +29,15 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case R.id.menuHome:
-                return true;
-            case R.id.menuAdd:
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Intent i = new Intent(getApplicationContext(), AddAssetActivity.class);
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(i);
                     }
                 }, 300);
+                return true;
+            case R.id.menuAdd:
                 break;
             case R.id.menuPerformance:
                 break;
