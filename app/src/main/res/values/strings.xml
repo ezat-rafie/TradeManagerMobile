@@ -1,3 +1,32 @@
 <resources>
     <string name="app_name">Trade Manager</string>
+
+    <string-array name="marketList">
+        <item name="Info">-- Select Market --</item>
+        <item name="Crypto">Crypto</item>
+        <item name="Stock">Stock</item>
+<!--        <item name="Futures">Futures</item>-->
+    </string-array>
+
+    <string-array name="defaultList">
+        <item name="Info"> select market first</item>
+    </string-array>
+
+    <string-array name="cryptoToAdd">
+        <item name="Info">-- Select Asset --</item>
+        <item name="Bitcoin">Bitcoin</item>
+        <item name="Ethereum">Ethereum</item>
+    </string-array>
+
+    <string-array name="stockToAdd">
+        <item name="Info">--Select Asset--</item>
+        <item name="Tesla">Tesla</item>
+        <item name="Apple">Apple</item>
+    </string-array>
+
+
+<!--    <string-array name="futuresToAdd">-->
+<!--        <item name="Dollar">Dollar</item>-->
+<!--        <item name="Ethereum">Ethereum</item>-->
+<!--    </string-array>-->
 </resources>
