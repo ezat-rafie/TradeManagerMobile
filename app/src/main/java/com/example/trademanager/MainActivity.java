@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 /*
     icons are downloaded from <a target="_blank" href="https://icons8.com/icon/NwAwrEVExFBt/stocks">Stocks</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
@@ -35,7 +34,14 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case R.id.menuHome:
-                return true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(i);
+                    }
+                }, 300);
+                break;
             case R.id.menuAdd:
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -46,10 +52,31 @@ public class MainActivity extends AppCompatActivity {
                 }, 300);
                 break;
             case R.id.menuPerformance:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(getApplicationContext(), OverallPerformanceActivity.class);
+                        startActivity(i);
+                    }
+                }, 300);
                 break;
             case R.id.menuAbout:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(getApplicationContext(), AboutActivity.class);
+                        startActivity(i);
+                    }
+                }, 300);
                 break;
             case R.id.menuHelp:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(getApplicationContext(), HelpActivity.class);
+                        startActivity(i);
+                    }
+                }, 300);
                 break;
         }
         return false;

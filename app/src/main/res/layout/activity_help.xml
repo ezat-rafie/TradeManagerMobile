@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddAssetActivity">
+    tools:context=".HelpActivity">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="ADD ASSET PAGE"
+        android:text="HELP PAGE"
         android:textSize="30sp"
         android:textAlignment="center"/>
 
