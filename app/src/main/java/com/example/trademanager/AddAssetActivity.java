@@ -3,17 +3,54 @@ package com.example.trademanager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class AddAssetActivity extends AppCompatActivity {
+public class AddAssetActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+    Spinner marketList, assetList;
+    EditText amountET, entryET;
+    Button saveBTN;
+    TextView errMsgTV;
+
+    String market,asset;
+    int amount;
+    double entry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_asset);
+
+        marketList = (Spinner)findViewById(R.id.marketSPIN);
+        assetList = (Spinner)findViewById(R.id.assetSPIN);
+        amountET = (EditText)findViewById(R.id.amountET);
+        entryET = (EditText)findViewById(R.id.entryET);
+        saveBTN = (Button)findViewById(R.id.saveBTN);
+        errMsgTV = (TextView) findViewById(R.id.errMsgTV);
+
+        marketList.setOnItemSelectedListener(this);
+        assetList.setOnItemSelectedListener(this);
+        saveBTN.setOnClickListener(this);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.marketList, android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        marketList.setAdapter(adapter);
+        marketList.setSelection(0);
+
+        adapter = ArrayAdapter.createFromResource(this, R.array.defaultList, android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        assetList.setAdapter(adapter);
     }
 
     @Override
@@ -75,5 +112,108 @@ public class AddAssetActivity extends AppCompatActivity {
                 break;
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId())
+        {
+            case R.id.saveBTN:
+                readData();
+                String errMsg = validateData();
+                if (errMsg.equals("")) {
+                    errMsgTV.setVisibility(View.GONE);
+                    Toast.makeText(this, "All good", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    errMsgTV.setText(errMsg);
+                    errMsgTV.setVisibility(View.VISIBLE);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        errMsgTV.setVisibility(View.GONE);
+        switch (adapterView.getId())
+        {
+            case R.id.marketSPIN:
+                switch(adapterView.getSelectedItemPosition())
+                {
+                    case 0:
+                        ((TextView)adapterView.getChildAt(0)).setTextColor(Color.GRAY);
+                        market = "";
+                        assetList.setEnabled(false);
+                        break;
+                    case 1: // Crypto
+                        market = "Crypto";
+                        assetList.setEnabled(true);
+                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.cryptoToAdd, android.R.layout.simple_spinner_dropdown_item);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        assetList.setAdapter(adapter);
+                        break;
+                    case 2: // Stock
+                        market = "Stock";
+                        assetList.setEnabled(true);
+                        adapter = ArrayAdapter.createFromResource(this, R.array.stockToAdd, android.R.layout.simple_spinner_dropdown_item);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        assetList.setAdapter(adapter);
+                        break;
+                }
+                break;
+            case R.id.assetSPIN:
+                switch(adapterView.getSelectedItemPosition())
+                {
+                    case 0:
+                        ((TextView)adapterView.getChildAt(0)).setTextColor(Color.GRAY);
+                        asset="";
+                        break;
+                    case 1:
+                    case 2:
+                        asset=adapterView.getSelectedItem().toString();
+                        break;
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) { }
+
+    private void readData()
+    {
+        // amount
+        if (amountET.getText().toString().equals("")) amount=0;
+        else amount = Integer.valueOf(amountET.getText().toString());
+
+        // entry price
+        if (entryET.getText().toString().equals("")) entry=0;
+        else entry = Double.valueOf(entryET.getText().toString());
+    }
+
+    private String validateData()
+    {
+        String errMsg="";
+        // market
+        if(market == "") return "- Please select market.";
+
+        // asset
+        if(asset == "") return "- Please select asset.";
+
+        // amount
+        if (amount <= 0)
+        {
+            if (!errMsg.equals("")) { errMsg += "\n"; }
+            errMsg += "- Amount should be greater than 0.";
+        }
+
+        // entry level
+        if (entry <= 0)
+        {
+            if (!errMsg.equals("")) { errMsg += "\n"; }
+            errMsg += "- Entry price should be greater than 0.";
+        }
+        return errMsg;
     }
 }
