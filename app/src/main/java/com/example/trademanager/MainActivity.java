@@ -3,6 +3,7 @@ package com.example.trademanager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
  */
 
 public class MainActivity extends AppCompatActivity {
+    BroadCast br = new BroadCast();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,5 +82,18 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return false;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+        registerReceiver(br, filter);
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(br);
+        super.onStop();
     }
 }
