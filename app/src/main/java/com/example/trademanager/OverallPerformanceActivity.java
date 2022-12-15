@@ -7,13 +7,29 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 public class OverallPerformanceActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_overall_performance);
+
+        DBHelper dbhelper = new DBHelper(this);
+        Toast.makeText(this, "DB created", Toast.LENGTH_LONG).show();
+        Asset a = new Asset();
+        a.name = "test";
+        Date date = new Date();
+        a.purchaseDate = date;
+        a.entryPrice = 44.33;
+        a.amount = 20;
+        dbhelper.addAsset(a);
+
     }
 
     @Override
