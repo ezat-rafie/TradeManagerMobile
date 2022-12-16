@@ -5,7 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -65,8 +71,6 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(ASSET_AMOUNT_COL,asset.amount);
         values.put(ASSET_ENTRY_PRICE_COL,asset.entryPrice);
         values.put(ASSET_PURCHASE_DATE, String.valueOf(asset.purchaseDate));
-//        values.put(ASSET_EXIT_PRICE,asset.exitPrice);
-//        values.put(ASSET_EXIT_DATE, String.valueOf(asset.exitDate));
 
         db.insert(TB_NAME,null,values);
 
@@ -91,6 +95,41 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         db.close();
         return data;
+    }
+
+    public ArrayList<Asset> getAllAssets(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String data ="";
+        Cursor cr = db.rawQuery("SELECT * FROM " + TB_NAME, null);
+        ArrayList<Asset> list = new ArrayList<>();
+
+        cr.moveToFirst();
+        if (cr != null && cr.getCount() > 0) {
+            do {
+                try{
+                    Asset ast = new Asset();
+                    ast.id = cr.getInt(cr.getColumnIndexOrThrow(ID_COL));
+                    ast.name = cr.getString(cr.getColumnIndexOrThrow(ASSET_NAME_COL));
+                    ast.amount = cr.getInt(cr.getColumnIndexOrThrow(ASSET_AMOUNT_COL));
+                    ast.entryPrice = cr.getDouble(cr.getColumnIndexOrThrow(ASSET_ENTRY_PRICE_COL));
+                    ast.purchaseDate = Date.valueOf( cr.getString(cr.getColumnIndexOrThrow(ASSET_PURCHASE_DATE)));
+                    ast.exitPrice = cr.getDouble(cr.getColumnIndexOrThrow(ASSET_EXIT_PRICE));
+                    String exitDate = cr.getString(cr.getColumnIndexOrThrow(ASSET_EXIT_DATE));
+                    if(exitDate != null){
+                        ast.exitDate = Date.valueOf(exitDate);
+                    }
+
+                    list.add(ast);
+                }
+                catch (Exception e){
+                    Log.e("Date parse error", e.getMessage());
+                }
+            } while(cr.moveToNext());
+        } else {
+
+        }
+        db.close();
+        return list;
     }
 
 }
