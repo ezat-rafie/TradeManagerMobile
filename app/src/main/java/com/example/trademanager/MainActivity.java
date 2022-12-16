@@ -1,5 +1,6 @@
 package com.example.trademanager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -26,7 +27,18 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /*
     icons are downloaded from <a target="_blank" href="https://icons8.com/icon/NwAwrEVExFBt/stocks">Stocks</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
@@ -39,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     Button btnAddAsset;
     public static final String CHANNEL_ID = "myChannel";
     public static final int NOTIFICATION_ID = 100;
+    private final Handler handler = new Handler();
+    OkHttpClient client = new OkHttpClient();
+    Request request = null;
 
     TableLayout assetTable;
     TableLayout historyTable;
@@ -59,8 +74,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        PopulateAssetTable();
+        try {
+            PopulateAssetTable();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         PopulateHistoryTable();
+        doTheAutoRefresh();
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Drawable dr = ResourcesCompat.getDrawable(getResources(), R.drawable.bitcoin, null);
         BitmapDrawable bmp = (BitmapDrawable) dr;
@@ -197,163 +217,315 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private void PopulateAssetTable(){
+    private void PopulateAssetTable() throws IOException {
+        assetTable.removeAllViews();
         DBHelper dbHelper = new DBHelper(this);
-        ArrayList<Asset> allAssets = dbHelper.getAllAssets();
-
-        TableRow tbrowHeader = new TableRow(this);
+        ArrayList<Asset> allCurrentAssets = dbHelper.getAllAssets();
+        ArrayList<Asset> allAssets = new ArrayList<Asset>();
+        if (allCurrentAssets.size() > 0) {
+            for (int i = 0; i < allCurrentAssets.size(); i++) {
+                if (allCurrentAssets.get(i).exitPrice == 0)
+                    allAssets.add(allCurrentAssets.get(i));
+            }
+        }
         TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-        tbrowHeader.setLayoutParams(tableRowParams);
 
-        TextView tv0 = new TextView(this);
-        tv0.setText("Asset ");
-        tv0.setTextColor(Color.WHITE);
-        tbrowHeader.addView(tv0);
+        if (allAssets.size() > 0){
+            TableRow tbrowHeader = new TableRow(this);
+            tbrowHeader.setLayoutParams(tableRowParams);
 
-        TextView tv1 = new TextView(this);
-        tv1.setText(" Amount ");
-        tv1.setTextColor(Color.WHITE);
-        tbrowHeader.addView(tv1);
+            TextView tv0 = new TextView(this);
+            tv0.setText("Asset ");
+            tv0.setTextColor(Color.WHITE);
+            tbrowHeader.addView(tv0);
 
-        TextView tv2 = new TextView(this);
-        tv2.setText(" Entry ");
-        tv2.setTextColor(Color.WHITE);
-        tbrowHeader.addView(tv2);
+            TextView tv1 = new TextView(this);
+            tv1.setText(" Amount ");
+            tv1.setTextColor(Color.WHITE);
+            tbrowHeader.addView(tv1);
 
-        TextView tv3 = new TextView(this);
-        tv3.setText(" Current Price ");
-        tv3.setTextColor(Color.WHITE);
-        tbrowHeader.addView(tv3);
+            TextView tv2 = new TextView(this);
+            tv2.setText(" Entry ");
+            tv2.setTextColor(Color.WHITE);
+            tbrowHeader.addView(tv2);
 
-        TextView tv4 = new TextView(this);
-        tv4.setText(" ROI ");
-        tv4.setTextColor(Color.WHITE);
-        tbrowHeader.addView(tv4);
+            TextView tv3 = new TextView(this);
+            tv3.setText(" Current ");
+            tv3.setTextColor(Color.WHITE);
+            tbrowHeader.addView(tv3);
 
-        TextView tv5 = new TextView(this);
-        tv5.setText(" ");
-        tv5.setTextColor(Color.WHITE);
-        tbrowHeader.addView(tv5);
+            TextView tv4 = new TextView(this);
+            tv4.setText(" ROI ");
+            tv4.setTextColor(Color.WHITE);
+            tbrowHeader.addView(tv4);
 
-        assetTable.addView(tbrowHeader);
+            TextView tv5 = new TextView(this);
+            tv5.setText(" ");
+            tv5.setTextColor(Color.WHITE);
+            tbrowHeader.addView(tv5);
 
-        for (int i = 0; i < allAssets.size(); i++) {
-            TableRow tbrow = new TableRow(this);
-            tbrow.setLayoutParams(tableRowParams);
+            assetTable.addView(tbrowHeader);
 
-            TextView tvAsset = new TextView(this);
-            tvAsset.setText(String.valueOf(allAssets.get(i).name));
-            tvAsset.setTextColor(Color.WHITE);
-            tvAsset.setGravity(Gravity.CENTER);
-            tbrow.addView(tvAsset);
+            for (int i = 0; i < allAssets.size(); i++) {
+                TableRow tbrow = new TableRow(this);
+                tbrow.setLayoutParams(tableRowParams);
 
-            TextView tvAmount = new TextView(this);
-            tvAmount.setText(String.valueOf(allAssets.get(i).amount));
-            tvAmount.setTextColor(Color.WHITE);
-            tvAmount.setGravity(Gravity.CENTER);
-            tbrow.addView(tvAmount);
+                TextView tvAsset = new TextView(this);
+                tvAsset.setText(String.valueOf(allAssets.get(i).name));
+                tvAsset.setTextColor(Color.WHITE);
+                tvAsset.setGravity(Gravity.CENTER);
+                tbrow.addView(tvAsset);
 
-            TextView tvEntry = new TextView(this);
-            tvEntry.setText(String.valueOf(allAssets.get(i).entryPrice));
-            tvEntry.setTextColor(Color.WHITE);
-            tvEntry.setGravity(Gravity.CENTER);
-            tbrow.addView(tvEntry);
+                TextView tvAmount = new TextView(this);
+                tvAmount.setText(String.valueOf(allAssets.get(i).amount));
+                tvAmount.setTextColor(Color.WHITE);
+                tvAmount.setGravity(Gravity.CENTER);
+                tbrow.addView(tvAmount);
 
-            TextView tvCurrent = new TextView(this);
-            tvCurrent.setText("300");
-            tvCurrent.setTextColor(Color.WHITE);
-            tvCurrent.setGravity(Gravity.CENTER);
-            tbrow.addView(tvCurrent);
+                TextView tvEntry = new TextView(this);
+                tvEntry.setText(String.valueOf(allAssets.get(i).entryPrice));
+                tvEntry.setTextColor(Color.WHITE);
+                tvEntry.setGravity(Gravity.CENTER);
+                tbrow.addView(tvEntry);
 
-            TextView tvROI = new TextView(this);
-            tvROI.setText("+200");
-            tvROI.setTextColor(Color.WHITE);
-            tvROI.setGravity(Gravity.CENTER);
-            tbrow.addView(tvROI);
+                TextView tvCurrent = new TextView(this);
+                tvCurrent.setText("");
+                tvCurrent.setTextColor(Color.WHITE);
+                tvCurrent.setGravity(Gravity.CENTER);
+                tbrow.addView(tvCurrent);
 
-            Button btnRemove = new Button(this);
-            btnRemove.setText("Close");
-            btnRemove.setTextColor(Color.RED);
-            tbrow.addView(btnRemove);
+                TextView tvROI = new TextView(this);
+                tvROI.setText("");
+                tvROI.setTextColor(Color.WHITE);
+                tvROI.setGravity(Gravity.CENTER);
+                tbrow.addView(tvROI);
 
-            assetTable.addView(tbrow);
+                request = null;
+                String assetName = String.valueOf(allAssets.get(i).name);
+                switch (assetName){
+                    case "Bitcoin":
+                        request = new Request.Builder()
+                                .url("https://coinranking1.p.rapidapi.com/coin/Qwsogvtv82FCd?referenceCurrencyUuid=yhjMzLPhuIDl&timePeriod=24h")
+                                .get()
+                                .addHeader("X-RapidAPI-Key", "c0f7ac6ff7msh60beb7b9065b62fp1cebd7jsnf13d66f9c460")
+                                .addHeader("X-RapidAPI-Host", "coinranking1.p.rapidapi.com")
+                                .build();
+                        break;
+                    case "Ethereum":
+                        request = new Request.Builder()
+                                .url("https://coinranking1.p.rapidapi.com/coin/razxDUgYGNAdQ?referenceCurrencyUuid=yhjMzLPhuIDl&timePeriod=24h")
+                                .get()
+                                .addHeader("X-RapidAPI-Key", "c0f7ac6ff7msh60beb7b9065b62fp1cebd7jsnf13d66f9c460")
+                                .addHeader("X-RapidAPI-Host", "coinranking1.p.rapidapi.com")
+                                .build();
+                        break;
+                    case "Tesla":
+                        request = new Request.Builder()
+                                .url("https://alpha-vantage.p.rapidapi.com/query?function=GLOBAL_QUOTE&symbol=TSLA&datatype=json")
+                                .get()
+                                .addHeader("X-RapidAPI-Key", "c0f7ac6ff7msh60beb7b9065b62fp1cebd7jsnf13d66f9c460")
+                                .addHeader("X-RapidAPI-Host", "alpha-vantage.p.rapidapi.com")
+                                .build();
+                        break;
+                    case "Apple":
+                        request = new Request.Builder()
+                                .url("https://alpha-vantage.p.rapidapi.com/query?function=GLOBAL_QUOTE&symbol=AAPL&datatype=json")
+                                .get()
+                                .addHeader("X-RapidAPI-Key", "c0f7ac6ff7msh60beb7b9065b62fp1cebd7jsnf13d66f9c460")
+                                .addHeader("X-RapidAPI-Host", "alpha-vantage.p.rapidapi.com")
+                                .build();
+                        break;
+                }
+
+
+                //Response response = client.newCall(request).execute();
+
+                final String[] currentPrice = {""};
+                final String[] roi = {""};
+                Float entryPrice = Float.valueOf(String.valueOf(allAssets.get(i).entryPrice));
+
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        tvCurrent.setText("error");
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        if (response.isSuccessful()){
+                            String myResponse = response.body().string();
+                            JSONObject json = null;
+                            try {
+                                json = new JSONObject(myResponse);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                if (assetName.equals("Bitcoin") || assetName.equals("Ethereum"))
+                                    currentPrice[0] = json.getJSONObject("data").getJSONObject("coin").getString("price");
+                                if (assetName.equals("Tesla") || assetName.equals("Apple"))
+                                    currentPrice[0] = json.getJSONObject("Global Quote").getString("05. price");
+
+                                currentPrice[0] = roundPrice(Float.valueOf(currentPrice[0])).toString();
+
+
+                                roi[0] = roundPrice(Float.valueOf(currentPrice[0]) - entryPrice).toString();
+
+                                MainActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tvCurrent.setText(currentPrice[0]);
+                                        tvROI.setText(roi[0]);
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+                Button btnRemove = new Button(this);
+                btnRemove.setText("X");
+                btnRemove.setTextColor(Color.RED);
+                btnRemove.setId(allAssets.get(i).id);
+                tbrow.addView(btnRemove);
+
+                assetTable.addView(tbrow);
+            }
+        }
+        else {
+            TableRow tbEmptyrow = new TableRow(this);
+            tbEmptyrow.setLayoutParams(tableRowParams);
+            TextView tvEmptyAsset = new TextView(this);
+            tvEmptyAsset.setText("No data was found.");
+            tvEmptyAsset.setTextColor(Color.WHITE);
+            tvEmptyAsset.setGravity(Gravity.CENTER);
+            tbEmptyrow.addView(tvEmptyAsset);
+            assetTable.addView(tbEmptyrow);
         }
     }
 
     private void PopulateHistoryTable(){
-        /*DBHelper dbHelper = new DBHelper(this);
-        ArrayList<Asset> allHistory = dbHelper.getAllHistory();
+        DBHelper dbHelper = new DBHelper(this);
+        ArrayList<Asset> allHistory = dbHelper.getAllAssets();
 
-        TableRow tbrowHeader = new TableRow(this);
         TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
         TableRow.LayoutParams textViewParam = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1.0f);
-        tbrowHeader.setLayoutParams(tableRowParams);
 
-        TextView tv0 = new TextView(this);
-        tv0.setText("Asset ");
-        tv0.setTextColor(Color.WHITE);
-        tv0.setLayoutParams(textViewParam);
-        tbrowHeader.addView(tv0);
+        ArrayList<Asset> historyList = new ArrayList<Asset>();
+        for (int i = 0; i < allHistory.size(); i++){
+            if (allHistory.get(i).exitPrice > 0)
+                historyList.add(allHistory.get(i));
+        }
 
-        TextView tv1 = new TextView(this);
-        tv1.setText("Amount ");
-        tv1.setTextColor(Color.WHITE);
-        tv1.setLayoutParams(textViewParam);
-        tbrowHeader.addView(tv1);
+        if (historyList.size() > 0){
+            TableRow tbrowHeader = new TableRow(this);
+            tbrowHeader.setLayoutParams(tableRowParams);
 
-        TextView tv2 = new TextView(this);
-        tv2.setText("Entry ");
-        tv2.setTextColor(Color.WHITE);
-        tv2.setLayoutParams(textViewParam);
-        tbrowHeader.addView(tv2);
+            TextView tv0 = new TextView(this);
+            tv0.setText("Asset ");
+            tv0.setTextColor(Color.WHITE);
+            tv0.setLayoutParams(textViewParam);
+            tbrowHeader.addView(tv0);
 
-        TextView tv3 = new TextView(this);
-        tv3.setText("Exit ");
-        tv3.setTextColor(Color.WHITE);
-        tv3.setLayoutParams(textViewParam);
-        tbrowHeader.addView(tv3);
+            TextView tv1 = new TextView(this);
+            tv1.setText("Amount ");
+            tv1.setTextColor(Color.WHITE);
+            tv1.setLayoutParams(textViewParam);
+            tbrowHeader.addView(tv1);
 
-        TextView tv4 = new TextView(this);
-        tv4.setText("ROI ");
-        tv4.setTextColor(Color.WHITE);
-        tv4.setLayoutParams(textViewParam);
-        tbrowHeader.addView(tv4);
-        historyTable.addView(tbrowHeader);
+            TextView tv2 = new TextView(this);
+            tv2.setText("Entry ");
+            tv2.setTextColor(Color.WHITE);
+            tv2.setLayoutParams(textViewParam);
+            tbrowHeader.addView(tv2);
 
-        for (int i = 0; i < allHistory.size(); i++) {
-            TableRow tbrow = new TableRow(this);
-            tbrow.setLayoutParams(tableRowParams);
+            TextView tv3 = new TextView(this);
+            tv3.setText("Exit ");
+            tv3.setTextColor(Color.WHITE);
+            tv3.setLayoutParams(textViewParam);
+            tbrowHeader.addView(tv3);
 
-            TextView tvAsset = new TextView(this);
-            tvAsset.setText(String.valueOf(allHistory.get(i).name));
-            tvAsset.setTextColor(Color.WHITE);
-            tvAsset.setLayoutParams(textViewParam);
-            tbrow.addView(tvAsset);
+            TextView tv4 = new TextView(this);
+            tv4.setText("ROI ");
+            tv4.setTextColor(Color.WHITE);
+            tv4.setLayoutParams(textViewParam);
+            tbrowHeader.addView(tv4);
+            historyTable.addView(tbrowHeader);
 
-            TextView tvAmount = new TextView(this);
-            tvAmount.setText(String.valueOf(allHistory.get(i).amount));
-            tvAmount.setTextColor(Color.WHITE);
-            tvAmount.setLayoutParams(textViewParam);
-            tbrow.addView(tvAmount);
+            for (int i = 0; i < historyList.size(); i++) {
+                TableRow tbrow = new TableRow(this);
+                tbrow.setLayoutParams(tableRowParams);
 
-            TextView tvEntry = new TextView(this);
-            tvEntry.setText(String.valueOf(allHistory.get(i).entryPrice));
-            tvEntry.setTextColor(Color.WHITE);
-            tvEntry.setLayoutParams(textViewParam);
-            tbrow.addView(tvEntry);
+                TextView tvAsset = new TextView(this);
+                tvAsset.setText(String.valueOf(historyList.get(i).name));
+                tvAsset.setTextColor(Color.WHITE);
+                tvAsset.setLayoutParams(textViewParam);
+                tbrow.addView(tvAsset);
 
-            TextView tvExit = new TextView(this);
-            tvExit.setText(String.valueOf(allHistory.get(i).exitPrice));
-            tvExit.setTextColor(Color.WHITE);
-            tvExit.setLayoutParams(textViewParam);
-            tbrow.addView(tvExit);
+                TextView tvAmount = new TextView(this);
+                tvAmount.setText(String.valueOf(historyList.get(i).amount));
+                tvAmount.setTextColor(Color.WHITE);
+                tvAmount.setLayoutParams(textViewParam);
+                tbrow.addView(tvAmount);
 
-            TextView tvROI = new TextView(this);
-            tvROI.setText("+200");
-            tvROI.setTextColor(Color.WHITE);
-            tvROI.setLayoutParams(textViewParam);
-            tbrow.addView(tvROI);
-            historyTable.addView(tbrow);
-        }*/
+                TextView tvEntry = new TextView(this);
+                tvEntry.setText(String.valueOf(historyList.get(i).entryPrice));
+                tvEntry.setTextColor(Color.WHITE);
+                tvEntry.setLayoutParams(textViewParam);
+                tbrow.addView(tvEntry);
+
+                TextView tvExit = new TextView(this);
+                tvExit.setText(String.valueOf(historyList.get(i).exitPrice));
+                tvExit.setTextColor(Color.WHITE);
+                tvExit.setLayoutParams(textViewParam);
+                tbrow.addView(tvExit);
+
+                double roiHist = Double.valueOf(historyList.get(i).exitPrice) - Double.valueOf(historyList.get(i).entryPrice);
+                TextView tvROI = new TextView(this);
+                tvROI.setText(String.valueOf(roiHist));
+                tvROI.setTextColor(Color.WHITE);
+                tvROI.setLayoutParams(textViewParam);
+                tbrow.addView(tvROI);
+                historyTable.addView(tbrow);
+            }
+        }
+        else {
+            TableRow tbEmptyrow = new TableRow(this);
+            tbEmptyrow.setLayoutParams(tableRowParams);
+            TextView tvEmptyAsset = new TextView(this);
+            tvEmptyAsset.setText("No data was found.");
+            tvEmptyAsset.setTextColor(Color.WHITE);
+            tvEmptyAsset.setGravity(Gravity.CENTER);
+            tbEmptyrow.addView(tvEmptyAsset);
+            historyTable.addView(tbEmptyrow);
+        }
+    }
+
+    public static String GetPrice(){
+        final String[] finalPrice = {"error"};
+
+        return finalPrice[0];
+    }
+
+    public static BigDecimal roundPrice(float d) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return bd;
+    }
+
+    private void doTheAutoRefresh() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PopulateAssetTable();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                doTheAutoRefresh();
+            }
+        }, 60000);
     }
 }
