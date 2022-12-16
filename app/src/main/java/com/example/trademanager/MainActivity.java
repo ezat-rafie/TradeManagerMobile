@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -371,6 +372,9 @@ public class MainActivity extends AppCompatActivity {
 
                                 roi[0] = roundPrice(Float.valueOf(currentPrice[0]) - entryPrice).toString();
 
+                                if(roi[0].startsWith("-")){
+
+                                }
                                 MainActivity.this.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -389,6 +393,16 @@ public class MainActivity extends AppCompatActivity {
                 btnRemove.setText("X");
                 btnRemove.setTextColor(Color.RED);
                 btnRemove.setId(allAssets.get(i).id);
+                btnRemove.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(tvCurrent.getText() != "error"){
+                            dbHelper.updateAsset(allAssets.get(Integer.valueOf(view.getId())), Double.valueOf(tvCurrent.getText().toString()));
+                        }else{
+                            Toast.makeText(getApplicationContext(), "Cannot exit with the current price", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
                 tbrow.addView(btnRemove);
 
                 assetTable.addView(tbrow);

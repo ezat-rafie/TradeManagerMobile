@@ -131,4 +131,23 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return list;
     }
+
+
+
+    public void updateAsset (Asset asset, double price){
+        // calling a method to get writable database.
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        // on below line we are passing all values
+        // along with its key and value pair.
+        values.put(ASSET_EXIT_PRICE, price );
+        values.put(ASSET_EXIT_DATE, Date.valueOf(LocalDate.now().toString()).toString());
+
+        // on below line we are calling a update method to update our database and passing our values.
+        // and we are comparing it with name of our course which is stored in original name variable.
+        db.update(TB_NAME, values, "id=?", new String[]{String.valueOf(asset.id)});
+        db.close();
+
+    }
 }
