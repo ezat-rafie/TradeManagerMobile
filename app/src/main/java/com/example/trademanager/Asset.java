@@ -1,13 +1,8 @@
 package com.example.trademanager;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
-
-import androidx.annotation.NonNull;
-
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 public class Asset implements Serializable {
 
@@ -24,6 +19,15 @@ public class Asset implements Serializable {
         this.amount = 0;
         this.entryPrice = 0.00;
         this.purchaseDate = null;
+        exitPrice = 0.00;
+        exitDate = null;
+    }
+
+    public Asset(String _name, int _amount, double _entry) {
+        this.name = _name;
+        this.amount = _amount;
+        this.entryPrice = _entry;
+        this.purchaseDate = java.sql.Date.valueOf(LocalDate.now().toString());
         exitPrice = 0.00;
         exitDate = null;
     }

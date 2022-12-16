@@ -2,6 +2,7 @@ package com.example.trademanager;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -64,13 +65,32 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(ASSET_AMOUNT_COL,asset.amount);
         values.put(ASSET_ENTRY_PRICE_COL,asset.entryPrice);
         values.put(ASSET_PURCHASE_DATE, String.valueOf(asset.purchaseDate));
-        values.put(ASSET_EXIT_PRICE,asset.exitPrice);
-        values.put(ASSET_EXIT_DATE, String.valueOf(asset.exitDate));
+//        values.put(ASSET_EXIT_PRICE,asset.exitPrice);
+//        values.put(ASSET_EXIT_DATE, String.valueOf(asset.exitDate));
 
         db.insert(TB_NAME,null,values);
 
         db.close();
+    }
 
+    public String showAsset()
+    {
+        SQLiteDatabase db=this.getWritableDatabase();
+        String data ="";
+        Cursor cr = db.rawQuery("SELECT * FROM " + TB_NAME, null);
+        cr.moveToFirst();
+        if (cr != null && cr.getCount() > 0) {
+            do {
+                for (int i = 0; i < cr.getColumnCount(); i++) {
+                    data = data + " / " + cr.getString(i);
+                }
+                data = data + "\n";
+            } while(cr.moveToNext());
+        } else {
+            data = "no data found";
+        }
+        db.close();
+        return data;
     }
 
 }

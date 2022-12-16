@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class AddAssetActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     Spinner marketList, assetList;
@@ -122,13 +121,17 @@ public class AddAssetActivity extends AppCompatActivity implements View.OnClickL
                 readData();
                 String errMsg = validateData();
                 if (errMsg.equals("")) {
-                    errMsgTV.setVisibility(View.GONE);
-                    Toast.makeText(this, "All good", Toast.LENGTH_LONG).show();
+                    DBHelper dbHelper = new DBHelper(this);
+                    Asset newAsset = new Asset(asset, amount, entry);
+                    dbHelper.addAsset(newAsset);
+                    errMsg= dbHelper.showAsset();
+                    errMsgTV.setTextColor(Color.BLUE);
                 }
                 else{
-                    errMsgTV.setText(errMsg);
-                    errMsgTV.setVisibility(View.VISIBLE);
+                    errMsgTV.setTextColor(getColor(com.google.android.material.R.color.design_default_color_error));
                 }
+                errMsgTV.setText(errMsg);
+                errMsgTV.setVisibility(View.VISIBLE);
                 break;
         }
     }
