@@ -15,6 +15,7 @@ public class Asset implements Serializable {
     Date exitDate;
 
     public Asset(){
+        this.id = 0;
         this.name = "";
         this.amount = 0;
         this.entryPrice = 0.00;

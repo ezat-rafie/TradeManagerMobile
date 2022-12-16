@@ -19,7 +19,7 @@ import android.widget.TextView;
 public class AddAssetActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     Spinner marketList, assetList;
     EditText amountET, entryET;
-    Button saveBTN;
+    Button saveBTN, cancelBTN;
     TextView errMsgTV;
 
     String market,asset;
@@ -36,11 +36,13 @@ public class AddAssetActivity extends AppCompatActivity implements View.OnClickL
         amountET = (EditText)findViewById(R.id.amountET);
         entryET = (EditText)findViewById(R.id.entryET);
         saveBTN = (Button)findViewById(R.id.saveBTN);
+        cancelBTN = (Button)findViewById(R.id.cancelBTN);
         errMsgTV = (TextView) findViewById(R.id.errMsgTV);
 
         marketList.setOnItemSelectedListener(this);
         assetList.setOnItemSelectedListener(this);
         saveBTN.setOnClickListener(this);
+        cancelBTN.setOnClickListener(this);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.marketList, android.R.layout.simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -132,6 +134,9 @@ public class AddAssetActivity extends AppCompatActivity implements View.OnClickL
                 }
                 errMsgTV.setText(errMsg);
                 errMsgTV.setVisibility(View.VISIBLE);
+                break;
+            case R.id.cancelBTN:
+                finish();
                 break;
         }
     }

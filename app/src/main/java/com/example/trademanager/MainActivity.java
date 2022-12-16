@@ -13,10 +13,18 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -28,14 +36,31 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     BroadCast br = new BroadCast();
     NotificationManager nm;
-
+    Button btnAddAsset;
     public static final String CHANNEL_ID = "myChannel";
     public static final int NOTIFICATION_ID = 100;
 
+    TableLayout assetTable;
+    TableLayout historyTable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        assetTable = (TableLayout) findViewById(R.id.assetTable);
+        historyTable = (TableLayout) findViewById(R.id.historyTable);
+        btnAddAsset = (Button) findViewById(R.id.btnAddAsset);
+
+        btnAddAsset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addAssetActivity = new Intent(getApplicationContext(), AddAssetActivity.class);
+                startActivity(addAssetActivity);
+            }
+        });
+
+        PopulateAssetTable();
+        PopulateHistoryTable();
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Drawable dr = ResourcesCompat.getDrawable(getResources(), R.drawable.bitcoin, null);
         BitmapDrawable bmp = (BitmapDrawable) dr;
@@ -170,5 +195,165 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         unregisterReceiver(br);
         super.onStop();
+    }
+
+    private void PopulateAssetTable(){
+        DBHelper dbHelper = new DBHelper(this);
+        ArrayList<Asset> allAssets = dbHelper.getAllAssets();
+
+        TableRow tbrowHeader = new TableRow(this);
+        TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+        tbrowHeader.setLayoutParams(tableRowParams);
+
+        TextView tv0 = new TextView(this);
+        tv0.setText("Asset ");
+        tv0.setTextColor(Color.WHITE);
+        tbrowHeader.addView(tv0);
+
+        TextView tv1 = new TextView(this);
+        tv1.setText(" Amount ");
+        tv1.setTextColor(Color.WHITE);
+        tbrowHeader.addView(tv1);
+
+        TextView tv2 = new TextView(this);
+        tv2.setText(" Entry ");
+        tv2.setTextColor(Color.WHITE);
+        tbrowHeader.addView(tv2);
+
+        TextView tv3 = new TextView(this);
+        tv3.setText(" Current Price ");
+        tv3.setTextColor(Color.WHITE);
+        tbrowHeader.addView(tv3);
+
+        TextView tv4 = new TextView(this);
+        tv4.setText(" ROI ");
+        tv4.setTextColor(Color.WHITE);
+        tbrowHeader.addView(tv4);
+
+        TextView tv5 = new TextView(this);
+        tv5.setText(" ");
+        tv5.setTextColor(Color.WHITE);
+        tbrowHeader.addView(tv5);
+
+        assetTable.addView(tbrowHeader);
+
+        for (int i = 0; i < allAssets.size(); i++) {
+            TableRow tbrow = new TableRow(this);
+            tbrow.setLayoutParams(tableRowParams);
+
+            TextView tvAsset = new TextView(this);
+            tvAsset.setText(String.valueOf(allAssets.get(i).name));
+            tvAsset.setTextColor(Color.WHITE);
+            tvAsset.setGravity(Gravity.CENTER);
+            tbrow.addView(tvAsset);
+
+            TextView tvAmount = new TextView(this);
+            tvAmount.setText(String.valueOf(allAssets.get(i).amount));
+            tvAmount.setTextColor(Color.WHITE);
+            tvAmount.setGravity(Gravity.CENTER);
+            tbrow.addView(tvAmount);
+
+            TextView tvEntry = new TextView(this);
+            tvEntry.setText(String.valueOf(allAssets.get(i).entryPrice));
+            tvEntry.setTextColor(Color.WHITE);
+            tvEntry.setGravity(Gravity.CENTER);
+            tbrow.addView(tvEntry);
+
+            TextView tvCurrent = new TextView(this);
+            tvCurrent.setText("300");
+            tvCurrent.setTextColor(Color.WHITE);
+            tvCurrent.setGravity(Gravity.CENTER);
+            tbrow.addView(tvCurrent);
+
+            TextView tvROI = new TextView(this);
+            tvROI.setText("+200");
+            tvROI.setTextColor(Color.WHITE);
+            tvROI.setGravity(Gravity.CENTER);
+            tbrow.addView(tvROI);
+
+            Button btnRemove = new Button(this);
+            btnRemove.setText("Close");
+            btnRemove.setTextColor(Color.RED);
+            tbrow.addView(btnRemove);
+
+            assetTable.addView(tbrow);
+        }
+    }
+
+    private void PopulateHistoryTable(){
+        /*DBHelper dbHelper = new DBHelper(this);
+        ArrayList<Asset> allHistory = dbHelper.getAllHistory();
+
+        TableRow tbrowHeader = new TableRow(this);
+        TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+        TableRow.LayoutParams textViewParam = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1.0f);
+        tbrowHeader.setLayoutParams(tableRowParams);
+
+        TextView tv0 = new TextView(this);
+        tv0.setText("Asset ");
+        tv0.setTextColor(Color.WHITE);
+        tv0.setLayoutParams(textViewParam);
+        tbrowHeader.addView(tv0);
+
+        TextView tv1 = new TextView(this);
+        tv1.setText("Amount ");
+        tv1.setTextColor(Color.WHITE);
+        tv1.setLayoutParams(textViewParam);
+        tbrowHeader.addView(tv1);
+
+        TextView tv2 = new TextView(this);
+        tv2.setText("Entry ");
+        tv2.setTextColor(Color.WHITE);
+        tv2.setLayoutParams(textViewParam);
+        tbrowHeader.addView(tv2);
+
+        TextView tv3 = new TextView(this);
+        tv3.setText("Exit ");
+        tv3.setTextColor(Color.WHITE);
+        tv3.setLayoutParams(textViewParam);
+        tbrowHeader.addView(tv3);
+
+        TextView tv4 = new TextView(this);
+        tv4.setText("ROI ");
+        tv4.setTextColor(Color.WHITE);
+        tv4.setLayoutParams(textViewParam);
+        tbrowHeader.addView(tv4);
+        historyTable.addView(tbrowHeader);
+
+        for (int i = 0; i < allHistory.size(); i++) {
+            TableRow tbrow = new TableRow(this);
+            tbrow.setLayoutParams(tableRowParams);
+
+            TextView tvAsset = new TextView(this);
+            tvAsset.setText(String.valueOf(allHistory.get(i).name));
+            tvAsset.setTextColor(Color.WHITE);
+            tvAsset.setLayoutParams(textViewParam);
+            tbrow.addView(tvAsset);
+
+            TextView tvAmount = new TextView(this);
+            tvAmount.setText(String.valueOf(allHistory.get(i).amount));
+            tvAmount.setTextColor(Color.WHITE);
+            tvAmount.setLayoutParams(textViewParam);
+            tbrow.addView(tvAmount);
+
+            TextView tvEntry = new TextView(this);
+            tvEntry.setText(String.valueOf(allHistory.get(i).entryPrice));
+            tvEntry.setTextColor(Color.WHITE);
+            tvEntry.setLayoutParams(textViewParam);
+            tbrow.addView(tvEntry);
+
+            TextView tvExit = new TextView(this);
+            tvExit.setText(String.valueOf(allHistory.get(i).exitPrice));
+            tvExit.setTextColor(Color.WHITE);
+            tvExit.setLayoutParams(textViewParam);
+            tbrow.addView(tvExit);
+
+            TextView tvROI = new TextView(this);
+            tvROI.setText("+200");
+            tvROI.setTextColor(Color.WHITE);
+            tvROI.setLayoutParams(textViewParam);
+            tbrow.addView(tvROI);
+            historyTable.addView(tbrow);
+        }*/
     }
 }

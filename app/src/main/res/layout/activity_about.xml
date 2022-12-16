@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AboutActivity">
+    tools:context=".AboutActivity"
+    android:background="@drawable/mainbackground">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="ABOUT PAGE"
+        android:textColor="@color/white"
         android:textSize="30sp"
         android:textAlignment="center"/>
 

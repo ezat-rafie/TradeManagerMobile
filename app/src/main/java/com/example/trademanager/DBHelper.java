@@ -132,4 +132,36 @@ public class DBHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    public ArrayList<Asset> getAllHistory(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String data ="";
+        Cursor cr = db.rawQuery("SELECT * FROM " + TB_NAME + " WHERE exitPrice IS NOT NULL;", null);
+        ArrayList<Asset> list = new ArrayList<>();
+
+        cr.moveToFirst();
+        if (cr != null && cr.getCount() > 0) {
+            do {
+                try{
+                    Asset ast = new Asset();
+                    ast.id = cr.getInt(cr.getColumnIndexOrThrow(ID_COL));
+                    ast.name = cr.getString(cr.getColumnIndexOrThrow(ASSET_NAME_COL));
+                    ast.amount = cr.getInt(cr.getColumnIndexOrThrow(ASSET_AMOUNT_COL));
+                    ast.entryPrice = cr.getDouble(cr.getColumnIndexOrThrow(ASSET_ENTRY_PRICE_COL));
+                    ast.purchaseDate = Date.valueOf( cr.getString(cr.getColumnIndexOrThrow(ASSET_PURCHASE_DATE)));
+                    ast.exitPrice = cr.getDouble(cr.getColumnIndexOrThrow(ASSET_EXIT_PRICE));
+                    String exitDate = cr.getString(cr.getColumnIndexOrThrow(ASSET_EXIT_DATE));
+                    if(exitDate != null){
+                        ast.exitDate = Date.valueOf(exitDate);
+                    }
+
+                    list.add(ast);
+                }
+                catch (Exception e){
+                    Log.e("Date parse error", e.getMessage());
+                }
+            } while(cr.moveToNext());
+        }
+        db.close();
+        return list;
+    }
 }

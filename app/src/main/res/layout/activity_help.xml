@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HelpActivity">
+    tools:context=".HelpActivity"
+    android:background="@drawable/mainbackground">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:textColor="@color/white"
         android:text="HELP PAGE"
         android:textSize="30sp"
         android:textAlignment="center"/>
