@@ -17,6 +17,7 @@ import android.os.Build;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -82,66 +83,6 @@ public class MainActivity extends AppCompatActivity {
         }
         PopulateHistoryTable();
         doTheAutoRefresh();
-        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Drawable dr = ResourcesCompat.getDrawable(getResources(), R.drawable.bitcoin, null);
-        BitmapDrawable bmp = (BitmapDrawable) dr;
-        Bitmap largeIcon = bmp.getBitmap();
-
-        //style of themes
-        Notification.BigPictureStyle bps = new Notification.BigPictureStyle()
-                .bigPicture(largeIcon)
-                .setBigContentTitle("MSG")
-                .setSummaryText("mgs mgs mgs");
-
-        Notification.InboxStyle is = new Notification.InboxStyle()
-                .addLine("You are losing now")
-                .setBigContentTitle("Warning")
-                .setSummaryText("new Inbox msg");
-
-        Notification notification;
-
-        // get all assets
-        DBHelper dh = new DBHelper(this);
-        ArrayList<Asset> assets = new ArrayList<>();
-        assets = dh.getAllAssets();
-        if( assets.isEmpty() == false){
-            //TODO
-            // get current price from API
-
-            boolean isItLosing = false;
-            for(int i = 0; i < assets.size(); i++){
-                // TODO
-                // compare it and if a current price is lower than entry price
-                isItLosing = true;
-            }
-
-            // TODO
-            // show the notification
-            if(isItLosing == true){
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    notification = new Notification.Builder(this)
-                            .setLargeIcon(largeIcon)
-                            .setSmallIcon(R.drawable.bitcoin)
-                            .setContentText("new Message")
-                            .setSubText("New Message of Trade Manager App")
-                            .setStyle(is)
-                            .setChannelId(CHANNEL_ID)
-                            .build();
-                    nm.createNotificationChannel(new NotificationChannel(CHANNEL_ID,"My Channel", NotificationManager.IMPORTANCE_HIGH));
-                }else{
-                    notification = new Notification.Builder(this)
-                            .setLargeIcon(largeIcon)
-                            .setSmallIcon(R.drawable.bitcoin)
-                            .setContentText("new Message")
-                            .setStyle(is)
-                            .setSubText("New Message of Trade Manager App")
-                            .setChannelId(CHANNEL_ID)
-                            .build();
-                }
-                nm.notify(NOTIFICATION_ID, notification);
-            }
-        }
-
     }
 
     @Override
@@ -348,6 +289,7 @@ public class MainActivity extends AppCompatActivity {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        Log.e("Error", e.getMessage());
                         tvCurrent.setText("error");
                     }
 
@@ -373,7 +315,46 @@ public class MainActivity extends AppCompatActivity {
                                 roi[0] = roundPrice(Float.valueOf(currentPrice[0]) - entryPrice).toString();
 
                                 if(roi[0].startsWith("-")){
+                                    nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                    Drawable dr = ResourcesCompat.getDrawable(getResources(), R.drawable.bitcoin, null);
+                                    BitmapDrawable bmp = (BitmapDrawable) dr;
+                                    Bitmap largeIcon = bmp.getBitmap();
 
+                                    //style of themes
+                                    Notification.BigPictureStyle bps = new Notification.BigPictureStyle()
+                                            .bigPicture(largeIcon)
+                                            .setBigContentTitle("MSG")
+                                            .setSummaryText("mgs mgs mgs");
+
+                                    Notification.InboxStyle is = new Notification.InboxStyle()
+                                            .addLine("You are losing now")
+                                            .setBigContentTitle("Warning")
+                                            .setSummaryText("new Inbox msg");
+
+                                    Notification notification;
+
+
+                                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                                        notification = new Notification.Builder(getApplicationContext())
+                                                .setLargeIcon(largeIcon)
+                                                .setSmallIcon(R.drawable.bitcoin)
+                                                .setContentText("new Message")
+                                                .setSubText("New Message of Trade Manager App")
+                                                .setStyle(is)
+                                                .setChannelId(CHANNEL_ID)
+                                                .build();
+                                        nm.createNotificationChannel(new NotificationChannel(CHANNEL_ID,"My Channel", NotificationManager.IMPORTANCE_HIGH));
+                                    }else{
+                                        notification = new Notification.Builder(getApplicationContext())
+                                                .setLargeIcon(largeIcon)
+                                                .setSmallIcon(R.drawable.bitcoin)
+                                                .setContentText("new Message")
+                                                .setStyle(is)
+                                                .setSubText("New Message of Trade Manager App")
+                                                .setChannelId(CHANNEL_ID)
+                                                .build();
+                                    }
+                                    nm.notify(NOTIFICATION_ID, notification);
                                 }
                                 MainActivity.this.runOnUiThread(new Runnable() {
                                     @Override
@@ -397,12 +378,18 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         if(tvCurrent.getText() != "error"){
-                            dbHelper.updateAsset(allAssets.get(Integer.valueOf(view.getId())), Double.valueOf(tvCurrent.getText().toString()));
+                            for (Asset ast:allAssets
+                                 ) {
+                                if (ast.id == btnRemove.getId()) {
+                                    dbHelper.updateAsset(ast, Double.valueOf(tvCurrent.getText().toString()));
+                                }
+                            }
                         }else{
                             Toast.makeText(getApplicationContext(), "Cannot exit with the current price", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
+
                 tbrow.addView(btnRemove);
 
                 assetTable.addView(tbrow);
