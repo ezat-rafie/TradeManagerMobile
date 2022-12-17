@@ -7,7 +7,6 @@ import androidx.core.content.res.ResourcesCompat;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
@@ -24,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -178,38 +176,28 @@ public class MainActivity extends AppCompatActivity {
             tbrowHeader.setLayoutParams(tableRowParams);
 
             TextView tv0 = new TextView(this);
-            tv0.setText("Asset ");
-            tv0.setTextColor(Color.WHITE);
-            tv0.setGravity(Gravity.CENTER);
-            tv0.setTypeface(tv0.getTypeface(), Typeface.BOLD);
+            tv0.setText("Asset");
+            applyDesign(tv0, true);
             tbrowHeader.addView(tv0, new TableRow.LayoutParams(0));
 
             TextView tv1 = new TextView(this);
-            tv1.setText(" Amount ");
-            tv1.setTextColor(Color.WHITE);
-            tv1.setGravity(Gravity.CENTER);
-            tv1.setTypeface(tv0.getTypeface(), Typeface.BOLD);
+            tv1.setText("Amount");
+            applyDesign(tv1, true);
             tbrowHeader.addView(tv1, new TableRow.LayoutParams(1));
 
             TextView tv2 = new TextView(this);
-            tv2.setText(" Entry ");
-            tv2.setTextColor(Color.WHITE);
-            tv2.setGravity(Gravity.CENTER);
-            tv2.setTypeface(tv0.getTypeface(), Typeface.BOLD);
+            tv2.setText("Entry");
+            applyDesign(tv2, true);
             tbrowHeader.addView(tv2, new TableRow.LayoutParams(2));
 
             TextView tv3 = new TextView(this);
-            tv3.setText(" Current ");
-            tv3.setTextColor(Color.WHITE);
-            tv3.setGravity(Gravity.CENTER);
-            tv3.setTypeface(tv0.getTypeface(), Typeface.BOLD);
+            tv3.setText("Current");
+            applyDesign(tv3, true);
             tbrowHeader.addView(tv3, new TableRow.LayoutParams(3));
 
             TextView tv4 = new TextView(this);
-            tv4.setText(" ROI ");
-            tv4.setTextColor(Color.WHITE);
-            tv4.setGravity(Gravity.CENTER);
-            tv4.setTypeface(tv0.getTypeface(), Typeface.BOLD);
+            tv4.setText("ROI");
+            applyDesign(tv4, true);
             tbrowHeader.addView(tv4, new TableRow.LayoutParams(4));
 
             TextView tv5 = new TextView(this);
@@ -225,32 +213,27 @@ public class MainActivity extends AppCompatActivity {
 
                 TextView tvAsset = new TextView(this);
                 tvAsset.setText(String.valueOf(allAssets.get(i).name));
-                tvAsset.setTextColor(Color.WHITE);
-                tvAsset.setGravity(Gravity.CENTER);
+                applyDesign(tvAsset,false);
                 tbrow.addView(tvAsset);
 
                 TextView tvAmount = new TextView(this);
                 tvAmount.setText(String.valueOf(allAssets.get(i).amount));
-                tvAmount.setTextColor(Color.WHITE);
-                tvAmount.setGravity(Gravity.CENTER);
+                applyDesign(tvAmount,false);
                 tbrow.addView(tvAmount);
 
                 TextView tvEntry = new TextView(this);
                 tvEntry.setText(String.valueOf(allAssets.get(i).entryPrice));
-                tvEntry.setTextColor(Color.WHITE);
-                tvEntry.setGravity(Gravity.CENTER);
+                applyDesign(tvEntry,false);
                 tbrow.addView(tvEntry);
 
                 TextView tvCurrent = new TextView(this);
                 tvCurrent.setText("");
-                tvCurrent.setTextColor(Color.WHITE);
-                tvCurrent.setGravity(Gravity.CENTER);
+                applyDesign(tvCurrent,false);
                 tbrow.addView(tvCurrent);
 
                 TextView tvROI = new TextView(this);
                 tvROI.setText("");
-                tvROI.setTextColor(Color.WHITE);
-                tvROI.setGravity(Gravity.CENTER);
+                applyDesign(tvROI,false);
                 tbrow.addView(tvROI);
 
                 request = null;
@@ -332,26 +315,20 @@ public class MainActivity extends AppCompatActivity {
                                     Bitmap largeIcon = bmp.getBitmap();
 
                                     //style of themes
-                                    Notification.BigPictureStyle bps = new Notification.BigPictureStyle()
-                                            .bigPicture(largeIcon)
-                                            .setBigContentTitle("MSG")
-                                            .setSummaryText("mgs mgs mgs");
-
-                                    Notification.InboxStyle is = new Notification.InboxStyle()
-                                            .addLine("You are losing now")
-                                            .setBigContentTitle("Warning")
-                                            .setSummaryText("new Inbox msg");
+//                                    Notification.InboxStyle is = new Notification.InboxStyle()
+//                                            .addLine("You are losing now")
+//                                            .setBigContentTitle("Warning")
+//                                            .setSummaryText("new Inbox msg");
 
                                     Notification notification;
-
 
                                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                                         notification = new Notification.Builder(getApplicationContext())
                                                 .setLargeIcon(largeIcon)
                                                 .setSmallIcon(R.drawable.bitcoin)
-                                                .setContentText("new Message")
+                                                .setContentText("You are losing now")
                                                 .setSubText("New Message of Trade Manager App")
-                                                .setStyle(is)
+//                                                .setStyle(is)
                                                 .setChannelId(CHANNEL_ID)
                                                 .build();
                                         nm.createNotificationChannel(new NotificationChannel(CHANNEL_ID,"My Channel", NotificationManager.IMPORTANCE_HIGH));
@@ -359,8 +336,8 @@ public class MainActivity extends AppCompatActivity {
                                         notification = new Notification.Builder(getApplicationContext())
                                                 .setLargeIcon(largeIcon)
                                                 .setSmallIcon(R.drawable.bitcoin)
-                                                .setContentText("new Message")
-                                                .setStyle(is)
+                                                .setContentText("You are losing now")
+//                                                .setStyle(is)
                                                 .setSubText("New Message of Trade Manager App")
                                                 .setChannelId(CHANNEL_ID)
                                                 .build();
@@ -393,7 +370,6 @@ public class MainActivity extends AppCompatActivity {
                                  ) {
                                 if (ast.id == btnRemove.getId()) {
                                     dbHelper.updateAsset(ast, Double.valueOf(tvCurrent.getText().toString()));
-                                    finish();
                                     startActivity(getIntent());
                                 }
                             }
@@ -410,14 +386,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         else {
-            TableRow tbEmptyrow = new TableRow(this);
-            tbEmptyrow.setLayoutParams(tableRowParams);
-            TextView tvEmptyAsset = new TextView(this);
-            tvEmptyAsset.setText("No data was found.");
-            tvEmptyAsset.setTextColor(Color.WHITE);
-            tvEmptyAsset.setGravity(Gravity.CENTER);
-            tbEmptyrow.addView(tvEmptyAsset);
-            assetTable.addView(tbEmptyrow);
+            assetTable.addView(getEmptyMessageRow());
         }
     }
 
@@ -427,6 +396,7 @@ public class MainActivity extends AppCompatActivity {
 
         TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
         TableRow.LayoutParams textViewParam = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1.0f);
+        textViewParam.setMargins(0,20,0,0);
 
         ArrayList<Asset> historyList = new ArrayList<Asset>();
         for (int i = 0; i < allHistory.size(); i++){
@@ -439,44 +409,30 @@ public class MainActivity extends AppCompatActivity {
             tbrowHeader.setLayoutParams(tableRowParams);
 
             TextView tv0 = new TextView(this);
-            tv0.setText("Asset ");
-            tv0.setTextColor(Color.WHITE);
-            tv0.setGravity(Gravity.CENTER);
-            tv0.setTypeface(tv0.getTypeface(), Typeface.BOLD);
-            tv0.setLayoutParams(textViewParam);
-            tbrowHeader.addView(tv0);
+            tv0.setText("Asset");
+            applyDesign(tv0, true);
+            tbrowHeader.addView(tv0, textViewParam);
 
             TextView tv1 = new TextView(this);
-            tv1.setText("Amount ");
-            tv1.setTextColor(Color.WHITE);
-            tv1.setGravity(Gravity.CENTER);
-            tv1.setTypeface(tv0.getTypeface(), Typeface.BOLD);
-            tv1.setLayoutParams(textViewParam);
-            tbrowHeader.addView(tv1);
+            tv1.setText("Amount");
+            applyDesign(tv1, true);
+            tbrowHeader.addView(tv1, textViewParam);
 
             TextView tv2 = new TextView(this);
-            tv2.setText("Entry ");
-            tv2.setTextColor(Color.WHITE);
-            tv2.setGravity(Gravity.CENTER);
-            tv2.setTypeface(tv0.getTypeface(), Typeface.BOLD);
-            tv2.setLayoutParams(textViewParam);
-            tbrowHeader.addView(tv2);
+            tv2.setText("Entry");
+            applyDesign(tv2, true);
+            tbrowHeader.addView(tv2, textViewParam);
 
             TextView tv3 = new TextView(this);
-            tv3.setText("Exit ");
-            tv3.setTextColor(Color.WHITE);
-            tv3.setGravity(Gravity.CENTER);
-            tv3.setTypeface(tv0.getTypeface(), Typeface.BOLD);
-            tv3.setLayoutParams(textViewParam);
-            tbrowHeader.addView(tv3);
+            tv3.setText("Exit");
+            applyDesign(tv3, true);
+            tbrowHeader.addView(tv3, textViewParam);
 
             TextView tv4 = new TextView(this);
-            tv4.setText("ROI ");
-            tv4.setTextColor(Color.WHITE);
-            tv4.setGravity(Gravity.CENTER);
-            tv4.setTypeface(tv0.getTypeface(), Typeface.BOLD);
-            tv4.setLayoutParams(textViewParam);
-            tbrowHeader.addView(tv4);
+            tv4.setText("ROI");
+            applyDesign(tv4, true);
+            tbrowHeader.addView(tv4, textViewParam);
+
             historyTable.addView(tbrowHeader);
 
             for (int i = 0; i < historyList.size(); i++) {
@@ -485,52 +441,58 @@ public class MainActivity extends AppCompatActivity {
 
                 TextView tvAsset = new TextView(this);
                 tvAsset.setText(String.valueOf(historyList.get(i).name));
-                tvAsset.setTextColor(Color.WHITE);
-                tvAsset.setGravity(Gravity.CENTER);
-                tvAsset.setLayoutParams(textViewParam);
-                tbrow.addView(tvAsset);
+                applyDesign(tvAsset,false);
+                tbrow.addView(tvAsset, textViewParam);
 
                 TextView tvAmount = new TextView(this);
                 tvAmount.setText(String.valueOf(historyList.get(i).amount));
-                tvAmount.setTextColor(Color.WHITE);
-                tvAmount.setGravity(Gravity.CENTER);
-                tvAmount.setLayoutParams(textViewParam);
-                tbrow.addView(tvAmount);
+                applyDesign(tvAmount,false);
+                tbrow.addView(tvAmount, textViewParam);
 
                 TextView tvEntry = new TextView(this);
                 tvEntry.setText(String.valueOf(historyList.get(i).entryPrice));
-                tvEntry.setTextColor(Color.WHITE);
-                tvEntry.setGravity(Gravity.CENTER);
-                tvEntry.setLayoutParams(textViewParam);
-                tbrow.addView(tvEntry);
+                applyDesign(tvEntry,false);
+                tbrow.addView(tvEntry, textViewParam);
 
                 TextView tvExit = new TextView(this);
                 tvExit.setText(String.valueOf(historyList.get(i).exitPrice));
-                tvExit.setTextColor(Color.WHITE);
-                tvExit.setGravity(Gravity.CENTER);
-                tvExit.setLayoutParams(textViewParam);
-                tbrow.addView(tvExit);
+                applyDesign(tvExit,false);
+                tbrow.addView(tvExit, textViewParam);
 
                 double roiHist = Double.valueOf(historyList.get(i).exitPrice) - Double.valueOf(historyList.get(i).entryPrice);
                 TextView tvROI = new TextView(this);
                 tvROI.setText(String.valueOf(roundPrice((float)roiHist)));
-                tvROI.setTextColor(Color.WHITE);
-                tvROI.setGravity(Gravity.CENTER);
-                tvROI.setLayoutParams(textViewParam);
-                tbrow.addView(tvROI);
+                applyDesign(tvROI,false);
+                tbrow.addView(tvROI, textViewParam);
+
                 historyTable.addView(tbrow);
             }
         }
         else {
-            TableRow tbEmptyrow = new TableRow(this);
-            tbEmptyrow.setLayoutParams(tableRowParams);
-            TextView tvEmptyAsset = new TextView(this);
-            tvEmptyAsset.setText("No data was found.");
-            tvEmptyAsset.setTextColor(Color.WHITE);
-            tvEmptyAsset.setGravity(Gravity.CENTER);
-            tbEmptyrow.addView(tvEmptyAsset);
-            historyTable.addView(tbEmptyrow);
+            historyTable.addView(getEmptyMessageRow());
         }
+    }
+
+
+    private void applyDesign(TextView tv, boolean isHeader) {
+        tv.setTextColor(Color.WHITE);
+        tv.setGravity(Gravity.CENTER);
+        if (isHeader) tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
+    }
+
+    private TableRow getEmptyMessageRow() {
+        TableRow tbEmptyrow = new TableRow(this);
+        TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+        tbEmptyrow.setLayoutParams(tableRowParams);
+        TextView tvEmptyAsset = new TextView(this);
+        TableRow.LayoutParams emptyPrm = new TableRow.LayoutParams(0);
+        emptyPrm.weight = 6;
+        tvEmptyAsset.setText("No data was found.");
+        tvEmptyAsset.setTextSize(15);
+        tvEmptyAsset.setTextColor(Color.WHITE);
+        tvEmptyAsset.setGravity(Gravity.CENTER);
+        tbEmptyrow.addView(tvEmptyAsset, emptyPrm);
+        return tbEmptyrow;
     }
 
     public static String GetPrice(){

@@ -9,6 +9,7 @@
         android:id="@+id/textAbout"
         android:text="ABOUT PAGE"
         android:textColor="@color/white"
-        android:textSize="30sp" />
+        android:textSize="25sp"
+        android:layout_marginHorizontal="10dp"/>
 
 </ScrollView>

@@ -18,11 +18,11 @@
             <Button
                 android:id="@+id/btnAddAsset"
                 android:layout_width="wrap_content"
-                android:layout_height="40sp"
+                android:layout_height="50dp"
                 android:text="Add Asset"
-                android:textSize="10dp"
+                android:textSize="20sp"
                 android:layout_gravity="center"
-                android:layout_margin="20sp"
+                android:layout_margin="20dp"
                 android:textColor="@color/black"
                 android:backgroundTint="@android:color/holo_orange_dark">
             </Button>
@@ -30,7 +30,9 @@
                 android:id="@+id/assetTable"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:stretchColumns="0,1,2,3,4,5">
+                android:stretchColumns="0,1,2,3,4,5"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp">
             </TableLayout>
             <TextView
                 android:text="History"
@@ -38,11 +40,14 @@
                 android:layout_gravity="center"
                 android:textStyle="bold"
                 android:textSize="25sp"
-                android:layout_margin="20sp" />
+                android:layout_marginTop="70dp"/>
             <TableLayout
                 android:id="@+id/historyTable"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp">
             </TableLayout>
         </GridLayout>
     </ScrollView>
