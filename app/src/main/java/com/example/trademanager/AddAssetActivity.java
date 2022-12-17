@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AddAssetActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     Spinner marketList, assetList;
@@ -52,6 +53,7 @@ public class AddAssetActivity extends AppCompatActivity implements View.OnClickL
         adapter = ArrayAdapter.createFromResource(this, R.array.defaultList, android.R.layout.simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         assetList.setAdapter(adapter);
+        assetList.setSelection(0);
     }
 
     @Override
@@ -126,14 +128,17 @@ public class AddAssetActivity extends AppCompatActivity implements View.OnClickL
                     DBHelper dbHelper = new DBHelper(this);
                     Asset newAsset = new Asset(asset, amount, entry);
                     dbHelper.addAsset(newAsset);
-                    errMsg= dbHelper.showAsset();
                     errMsgTV.setTextColor(Color.BLUE);
+                    // redirect to Main page
+                    Toast.makeText(getApplicationContext(),"New asset is added!", Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(i);
                 }
                 else{
                     errMsgTV.setTextColor(getColor(com.google.android.material.R.color.design_default_color_error));
+                    errMsgTV.setText(errMsg);
+                    errMsgTV.setVisibility(View.VISIBLE);
                 }
-                errMsgTV.setText(errMsg);
-                errMsgTV.setVisibility(View.VISIBLE);
                 break;
             case R.id.cancelBTN:
                 finish();
@@ -150,23 +155,32 @@ public class AddAssetActivity extends AppCompatActivity implements View.OnClickL
                 switch(adapterView.getSelectedItemPosition())
                 {
                     case 0:
-                        ((TextView)adapterView.getChildAt(0)).setTextColor(Color.GRAY);
                         market = "";
+                        asset = "";
+                        ((TextView)adapterView.getChildAt(0)).setTextColor(Color.GRAY);
+                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.defaultList, android.R.layout.simple_spinner_dropdown_item);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        assetList.setAdapter(adapter);
+                        assetList.setSelection(0);
                         assetList.setEnabled(false);
                         break;
                     case 1: // Crypto
                         market = "Crypto";
+                        ((TextView)adapterView.getChildAt(0)).setTextColor(Color.WHITE);
                         assetList.setEnabled(true);
-                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.cryptoToAdd, android.R.layout.simple_spinner_dropdown_item);
+                        adapter = ArrayAdapter.createFromResource(this, R.array.cryptoToAdd, android.R.layout.simple_spinner_dropdown_item);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         assetList.setAdapter(adapter);
+                        assetList.setSelection(0);
                         break;
                     case 2: // Stock
                         market = "Stock";
                         assetList.setEnabled(true);
+                        ((TextView)adapterView.getChildAt(0)).setTextColor(Color.WHITE);
                         adapter = ArrayAdapter.createFromResource(this, R.array.stockToAdd, android.R.layout.simple_spinner_dropdown_item);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         assetList.setAdapter(adapter);
+                        assetList.setSelection(0);
                         break;
                 }
                 break;
@@ -174,11 +188,14 @@ public class AddAssetActivity extends AppCompatActivity implements View.OnClickL
                 switch(adapterView.getSelectedItemPosition())
                 {
                     case 0:
-                        ((TextView)adapterView.getChildAt(0)).setTextColor(Color.GRAY);
+                        TextView sth = (TextView)adapterView.getChildAt(0);
+                        if (sth != null) sth.setTextColor(Color.GRAY);
+                        //((TextView)adapterView.getChildAt(0)).setTextColor(Color.GRAY);
                         asset="";
                         break;
                     case 1:
                     case 2:
+                        ((TextView)adapterView.getChildAt(0)).setTextColor(Color.WHITE);
                         asset=adapterView.getSelectedItem().toString();
                         break;
                 }

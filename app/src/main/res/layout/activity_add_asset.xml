@@ -23,22 +23,27 @@
         android:stretchColumns="0,1"
         android:layout_marginTop="10dp">
         <TableRow>
+
             <Spinner
                 android:id="@+id/marketSPIN"
+                style="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/white"
                 android:layout_column="0"
-                android:layout_marginRight="5dp"/>
+                android:layout_marginRight="5dp"
+                android:backgroundTint="@color/ic_launcher_icon_background"
+                android:backgroundTintMode="src_in"
+                android:textColor="@color/white" />
+
             <Spinner
                 android:id="@+id/assetSPIN"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/white"
                 android:layout_column="1"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginLeft="5dp"
+                android:backgroundTint="@color/ic_launcher_icon_background"
+                android:backgroundTintMode="src_in"
+                android:textColor="@color/white" />
         </TableRow>
     </TableLayout>
 
@@ -50,15 +55,17 @@
             android:layout_column="0"
             android:text="Amount"
             android:textSize="30dp"/>
+
         <EditText
             android:id="@+id/amountET"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/white"
             android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:backgroundTint="@color/white"
+            android:backgroundTintMode="src_in"
             android:inputType="number"
-            android:layout_marginLeft="10dp"/>
+            android:textColor="@color/white" />
     </TableRow>
 
     <TableRow
@@ -70,15 +77,17 @@
             android:layout_column="0"
             android:text="Entry Price"
             android:textSize="30dp"/>
+
         <EditText
             android:id="@+id/entryET"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/white"
             android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:backgroundTint="@color/ic_launcher_icon_background"
+            android:backgroundTintMode="src_in"
             android:inputType="numberDecimal"
-            android:layout_marginLeft="10dp"/>
+            android:textColor="@color/white" />
     </TableRow>
 
     <TableRow>
@@ -99,11 +108,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="1"
-            android:text="SAVE"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp"
+            android:backgroundTint="@color/highlight_orange"
+            android:text="SAVE"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="10dp"/>
+            android:textStyle="bold" />
     </TableRow>
     <TableRow>
         <Button
@@ -118,40 +128,3 @@
             android:layout_marginLeft="10dp"/>
     </TableRow>
 </TableLayout>
-
-
-
-<!--<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    tools:context=".AddAssetActivity"-->
-<!--    android:columnCount="3"-->
-<!--    android:rowCount="6"-->
-<!--    android:padding="30sp">-->
-<!--    <TextView-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_columnWeight="1"-->
-<!--        android:text="Asset"-->
-<!--        android:textSize="30dp"/>-->
-<!--    <Spinner-->
-<!--        android:id="@+id/marketSPIN"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_columnWeight="1"/>-->
-<!--    <Spinner-->
-<!--        android:id="@+id/assetSPIN"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_columnWeight="1"/>-->
-
-<!--    <TextView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="selected: "-->
-<!--        android:textSize="30sp"-->
-<!--        android:layout_columnSpan="2"/>-->
-
-<!--</GridLayout>-->

@@ -11,6 +11,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -170,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                     allAssets.add(allCurrentAssets.get(i));
             }
         }
-        TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+        TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
         if (allAssets.size() > 0){
             TableRow tbrowHeader = new TableRow(this);
@@ -179,32 +180,42 @@ public class MainActivity extends AppCompatActivity {
             TextView tv0 = new TextView(this);
             tv0.setText("Asset ");
             tv0.setTextColor(Color.WHITE);
-            tbrowHeader.addView(tv0);
+            tv0.setGravity(Gravity.CENTER);
+            tv0.setTypeface(tv0.getTypeface(), Typeface.BOLD);
+            tbrowHeader.addView(tv0, new TableRow.LayoutParams(0));
 
             TextView tv1 = new TextView(this);
             tv1.setText(" Amount ");
             tv1.setTextColor(Color.WHITE);
-            tbrowHeader.addView(tv1);
+            tv1.setGravity(Gravity.CENTER);
+            tv1.setTypeface(tv0.getTypeface(), Typeface.BOLD);
+            tbrowHeader.addView(tv1, new TableRow.LayoutParams(1));
 
             TextView tv2 = new TextView(this);
             tv2.setText(" Entry ");
             tv2.setTextColor(Color.WHITE);
-            tbrowHeader.addView(tv2);
+            tv2.setGravity(Gravity.CENTER);
+            tv2.setTypeface(tv0.getTypeface(), Typeface.BOLD);
+            tbrowHeader.addView(tv2, new TableRow.LayoutParams(2));
 
             TextView tv3 = new TextView(this);
             tv3.setText(" Current ");
             tv3.setTextColor(Color.WHITE);
-            tbrowHeader.addView(tv3);
+            tv3.setGravity(Gravity.CENTER);
+            tv3.setTypeface(tv0.getTypeface(), Typeface.BOLD);
+            tbrowHeader.addView(tv3, new TableRow.LayoutParams(3));
 
             TextView tv4 = new TextView(this);
             tv4.setText(" ROI ");
             tv4.setTextColor(Color.WHITE);
-            tbrowHeader.addView(tv4);
+            tv4.setGravity(Gravity.CENTER);
+            tv4.setTypeface(tv0.getTypeface(), Typeface.BOLD);
+            tbrowHeader.addView(tv4, new TableRow.LayoutParams(4));
 
             TextView tv5 = new TextView(this);
             tv5.setText(" ");
-            tv5.setTextColor(Color.WHITE);
-            tbrowHeader.addView(tv5);
+            TableRow.LayoutParams tbParms = new TableRow.LayoutParams(5);
+            tbrowHeader.addView(tv5, tbParms);
 
             assetTable.addView(tbrowHeader);
 
@@ -389,9 +400,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-                tbrow.addView(btnRemove);
-
+                TableRow.LayoutParams btPrm = new TableRow.LayoutParams(5);
+                btPrm.width=50;
+                btPrm.setMargins(10, 2,2,2);
+                tbrow.addView(btnRemove, btPrm);
                 assetTable.addView(tbrow);
             }
         }
@@ -427,30 +439,40 @@ public class MainActivity extends AppCompatActivity {
             TextView tv0 = new TextView(this);
             tv0.setText("Asset ");
             tv0.setTextColor(Color.WHITE);
+            tv0.setGravity(Gravity.CENTER);
+            tv0.setTypeface(tv0.getTypeface(), Typeface.BOLD);
             tv0.setLayoutParams(textViewParam);
             tbrowHeader.addView(tv0);
 
             TextView tv1 = new TextView(this);
             tv1.setText("Amount ");
             tv1.setTextColor(Color.WHITE);
+            tv1.setGravity(Gravity.CENTER);
+            tv1.setTypeface(tv0.getTypeface(), Typeface.BOLD);
             tv1.setLayoutParams(textViewParam);
             tbrowHeader.addView(tv1);
 
             TextView tv2 = new TextView(this);
             tv2.setText("Entry ");
             tv2.setTextColor(Color.WHITE);
+            tv2.setGravity(Gravity.CENTER);
+            tv2.setTypeface(tv0.getTypeface(), Typeface.BOLD);
             tv2.setLayoutParams(textViewParam);
             tbrowHeader.addView(tv2);
 
             TextView tv3 = new TextView(this);
             tv3.setText("Exit ");
             tv3.setTextColor(Color.WHITE);
+            tv3.setGravity(Gravity.CENTER);
+            tv3.setTypeface(tv0.getTypeface(), Typeface.BOLD);
             tv3.setLayoutParams(textViewParam);
             tbrowHeader.addView(tv3);
 
             TextView tv4 = new TextView(this);
             tv4.setText("ROI ");
             tv4.setTextColor(Color.WHITE);
+            tv4.setGravity(Gravity.CENTER);
+            tv4.setTypeface(tv0.getTypeface(), Typeface.BOLD);
             tv4.setLayoutParams(textViewParam);
             tbrowHeader.addView(tv4);
             historyTable.addView(tbrowHeader);
@@ -462,24 +484,28 @@ public class MainActivity extends AppCompatActivity {
                 TextView tvAsset = new TextView(this);
                 tvAsset.setText(String.valueOf(historyList.get(i).name));
                 tvAsset.setTextColor(Color.WHITE);
+                tvAsset.setGravity(Gravity.CENTER);
                 tvAsset.setLayoutParams(textViewParam);
                 tbrow.addView(tvAsset);
 
                 TextView tvAmount = new TextView(this);
                 tvAmount.setText(String.valueOf(historyList.get(i).amount));
                 tvAmount.setTextColor(Color.WHITE);
+                tvAmount.setGravity(Gravity.CENTER);
                 tvAmount.setLayoutParams(textViewParam);
                 tbrow.addView(tvAmount);
 
                 TextView tvEntry = new TextView(this);
                 tvEntry.setText(String.valueOf(historyList.get(i).entryPrice));
                 tvEntry.setTextColor(Color.WHITE);
+                tvEntry.setGravity(Gravity.CENTER);
                 tvEntry.setLayoutParams(textViewParam);
                 tbrow.addView(tvEntry);
 
                 TextView tvExit = new TextView(this);
                 tvExit.setText(String.valueOf(historyList.get(i).exitPrice));
                 tvExit.setTextColor(Color.WHITE);
+                tvExit.setGravity(Gravity.CENTER);
                 tvExit.setLayoutParams(textViewParam);
                 tbrow.addView(tvExit);
 
@@ -487,6 +513,7 @@ public class MainActivity extends AppCompatActivity {
                 TextView tvROI = new TextView(this);
                 tvROI.setText(String.valueOf(roundPrice((float)roiHist)));
                 tvROI.setTextColor(Color.WHITE);
+                tvROI.setGravity(Gravity.CENTER);
                 tvROI.setLayoutParams(textViewParam);
                 tbrow.addView(tvROI);
                 historyTable.addView(tbrow);
@@ -527,6 +554,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 doTheAutoRefresh();
             }
-        }, 60000);
+        }, 300000);
     }
 }

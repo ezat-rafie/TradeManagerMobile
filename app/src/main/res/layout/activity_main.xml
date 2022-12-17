@@ -29,7 +29,8 @@
             <TableLayout
                 android:id="@+id/assetTable"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:stretchColumns="0,1,2,3,4,5">
             </TableLayout>
             <TextView
                 android:text="History"
