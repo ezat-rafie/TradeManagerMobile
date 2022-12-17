@@ -393,6 +393,8 @@ public class MainActivity extends AppCompatActivity {
                                  ) {
                                 if (ast.id == btnRemove.getId()) {
                                     dbHelper.updateAsset(ast, Double.valueOf(tvCurrent.getText().toString()));
+                                    finish();
+                                    startActivity(getIntent());
                                 }
                             }
                         }else{
