@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="OVERALL PERFORMANCE"
+            android:text="Account Summary"
             android:layout_gravity="center"
             android:layout_columnSpan="4"
             android:textAlignment="center"
@@ -33,29 +33,65 @@
             android:padding="10dp">
         </TextView>
 
+        <TableLayout
+            android:id="@+id/allocationTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+        </TableLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_columnSpan="4"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_columnSpan="4">
 
-            <ListView
-                android:id="@+id/assetList"
-                android:layout_width="fill_parent"
+            <Button
+                android:id="@+id/btcBtn"
+                android:text="BTC"
+                android:layout_width="0dp"
+                android:padding="0dp"
+                android:textSize="10dp"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="4"
-                android:dividerHeight="1dp"
-                android:footerDividersEnabled="false"
-                android:textColor="@color/white"/>
-        </LinearLayout>
+                android:layout_weight=".0"
+                android:backgroundTint="@color/teal_200"/>
 
+            <Button
+                android:id="@+id/ethBtn"
+                android:text="ETH"
+                android:layout_width="0dp"
+                android:textSize="10dp"
+                android:padding="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".0"
+                android:backgroundTint="#e0007f"/>
+            <Button
+                android:id="@+id/teslaBtn"
+                android:text="TSLA"
+                android:layout_width="0dp"
+                android:padding="0dp"
+                android:textSize="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".0"
+                android:backgroundTint="#fcba03"/>
+
+            <Button
+                android:id="@+id/appleBtn"
+                android:text="AAPL"
+                android:layout_width="0dp"
+                android:padding="0dp"
+                android:textSize="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".0"
+                android:backgroundTint="#00e05a"/>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/txtYearlyPerformanceTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_columnSpan="4"
-            android:text="Yearly Performance"
+            android:text="Overall Realised Panel"
             android:layout_marginTop="20dp"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -65,147 +101,47 @@
 
         <TextView
             android:id="@+id/txtTotalProfit"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
+            android:layout_columnSpan="4"
             android:text="Total Profit: "
             android:textColor="@color/white"
             android:textSize="20sp"
             android:padding="10dp">
         </TextView>
-        <TextView
-            android:id="@+id/txtTotalProfitValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
-            android:textColor="@color/white"
-            android:text="0"
-            android:textSize="20sp"
-            android:padding="10dp">
-        </TextView>
+
         <TextView
             android:id="@+id/txtTotalLoss"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
+            android:layout_columnSpan="4"
             android:textColor="@color/white"
             android:text="Total Loss: "
             android:textSize="20sp"
             android:padding="10dp">
         </TextView>
-        <TextView
-            android:id="@+id/txtTotalLossValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
-            android:textColor="@color/white"
-            android:text="0"
-            android:textSize="20sp"
-            android:padding="10dp">
-        </TextView>
+
         <TextView
             android:id="@+id/txtRevenue"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
+            android:layout_columnSpan="4"
             android:textColor="@color/white"
             android:text="Revenue: "
             android:textSize="20sp"
             android:padding="10dp">
         </TextView>
-        <TextView
-            android:id="@+id/txtRevenueValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
-            android:textColor="@color/white"
-            android:text="0"
-            android:textSize="20sp"
-            android:padding="10dp">
-        </TextView>
 
         <TextView
-            android:id="@+id/txtMonthlyPerformanceTitle"
-            android:layout_width="wrap_content"
+            android:id="@+id/txtAnalysis"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_columnSpan="4"
             android:textColor="@color/white"
-            android:layout_columnSpan="2"
-            android:text="Performance of By Month: "
-            android:layout_marginTop="20dp"
-            android:textSize="20sp"
-            android:padding="10dp"
-            android:textStyle="bold">
-        </TextView>
-        <Spinner
-            android:id="@+id/monthSpinner"
-            android:layout_width="45dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/white"
-            android:layout_columnSpan="2"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/txtTotalProfitByMonth"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
-            android:text="Monthly Profit: "
-            android:textColor="@color/white"
+            android:text="Analysis: "
             android:textSize="20sp"
             android:padding="10dp">
         </TextView>
-        <TextView
-            android:id="@+id/txtTotalProfitValueByMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
-            android:textColor="@color/white"
-            android:text="0"
-            android:textSize="20sp"
-            android:padding="10dp">
-        </TextView>
-        <TextView
-            android:id="@+id/txtTotalLossByMonth"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
-            android:text="Monthly Loss: "
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:padding="10dp">
-        </TextView>
-        <TextView
-            android:id="@+id/txtTotalLossValueByMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
-            android:textColor="@color/white"
-            android:text="0"
-            android:textSize="20sp"
-            android:padding="10dp">
-        </TextView>
-        <TextView
-            android:id="@+id/txtRevenueByMonth"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
-            android:text="Monthly Revenue: "
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:padding="10dp">
-        </TextView>
-        <TextView
-            android:id="@+id/txtRevenueValueByMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
-            android:text="0"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:padding="10dp">
-        </TextView>
-
     </GridLayout>
 
 </ScrollView>

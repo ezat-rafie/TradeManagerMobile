@@ -485,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
 
                 double roiHist = Double.valueOf(historyList.get(i).exitPrice) - Double.valueOf(historyList.get(i).entryPrice);
                 TextView tvROI = new TextView(this);
-                tvROI.setText(String.valueOf(roiHist));
+                tvROI.setText(String.valueOf(roundPrice((float)roiHist)));
                 tvROI.setTextColor(Color.WHITE);
                 tvROI.setLayoutParams(textViewParam);
                 tbrow.addView(tvROI);
