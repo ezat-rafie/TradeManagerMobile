@@ -241,25 +241,25 @@ public class MainActivity extends AppCompatActivity {
                 switch (assetName){
                     case "Bitcoin":
                         request = new Request.Builder()
-                                .url("https://coinranking1.p.rapidapi.com/coin/Qwsogvtv82FCd?referenceCurrencyUuid=yhjMzLPhuIDl&timePeriod=24h")
+                                .url("https://coinranking1.p.rapidapi.com/coin/##")
                                 .get()
-                                .addHeader("X-RapidAPI-Key", "c0f7ac6ff7msh60beb7b9065b62fp1cebd7jsnf13d66f9c460")
+                                .addHeader("X-RapidAPI-Key", "###")
                                 .addHeader("X-RapidAPI-Host", "coinranking1.p.rapidapi.com")
                                 .build();
                         break;
                     case "Ethereum":
                         request = new Request.Builder()
-                                .url("https://coinranking1.p.rapidapi.com/coin/razxDUgYGNAdQ?referenceCurrencyUuid=yhjMzLPhuIDl&timePeriod=24h")
+                                .url("https://coinranking1.p.rapidapi.com/coin/##")
                                 .get()
-                                .addHeader("X-RapidAPI-Key", "c0f7ac6ff7msh60beb7b9065b62fp1cebd7jsnf13d66f9c460")
+                                .addHeader("X-RapidAPI-Key", "###")
                                 .addHeader("X-RapidAPI-Host", "coinranking1.p.rapidapi.com")
                                 .build();
                         break;
                     case "Tesla":
                         request = new Request.Builder()
-                                .url("https://alpha-vantage.p.rapidapi.com/query?function=GLOBAL_QUOTE&symbol=TSLA&datatype=json")
+                                .url("https://alpha-vantage.p.rapidapi.com/##")
                                 .get()
-                                .addHeader("X-RapidAPI-Key", "c0f7ac6ff7msh60beb7b9065b62fp1cebd7jsnf13d66f9c460")
+                                .addHeader("X-RapidAPI-Key", "##")
                                 .addHeader("X-RapidAPI-Host", "alpha-vantage.p.rapidapi.com")
                                 .build();
                         break;
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
                         request = new Request.Builder()
                                 .url("https://alpha-vantage.p.rapidapi.com/query?function=GLOBAL_QUOTE&symbol=AAPL&datatype=json")
                                 .get()
-                                .addHeader("X-RapidAPI-Key", "c0f7ac6ff7msh60beb7b9065b62fp1cebd7jsnf13d66f9c460")
+                                .addHeader("X-RapidAPI-Key", "##")
                                 .addHeader("X-RapidAPI-Host", "alpha-vantage.p.rapidapi.com")
                                 .build();
                         break;
